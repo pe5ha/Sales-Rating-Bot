@@ -1,0 +1,5 @@
+# File with secret token 
+.clasp.json
+
+# Local Packages
+node_modules/
