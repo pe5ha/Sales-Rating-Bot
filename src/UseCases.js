@@ -95,7 +95,7 @@ function startCommand(payload=null){
   }
   // просто /start
   else{
-    botSendMessage(chat_id,"Старт");
+    botSendMessage(chat_id,"Привет!");
 
   }
 }
