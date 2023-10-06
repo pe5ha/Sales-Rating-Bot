@@ -2,67 +2,8 @@
  *   Bot use cases detecting (User Roles and Current actions)
  */
 function useCases(){
-
-
-  // start
-
-  // if(user.currentAction == UserActions.input_phone){
-  //   if(contents.message.contact) {
-  //     user.setUserPhone(contents.message.contact.phone_number);
-  //     user.setUserCurrentAction(UserActions.input_name);
-  //     botSendMessage(chat_id, needName);
-  //     return;
-  //   }
-  // }
   
-
-  // Новый код без вызова биографии
-  if(user.currentAction == UserActions.input_name){
-    if(text == "/start") user.setUserName(name);
-    else {
-      text = text
-         .replace(/&/g, "")
-         .replace(/</g, "")
-         .replace(/>/g, "")
-         .replace(/"/g, "");
-      if(!text) text = name;
-      user.setUserName(text);
-    }
-    //user.setUserCurrentAction(UserActions.input_bio);
-    user.setUserCurrentAction(UserActions.without_action);
-    user.setUserBio("-");
-    user.setRating(1000);
-    //botSendMessage(chat_id, needBio);
-    if(user.role != "участник"){
-      user.setUserRole("участник");
-    }
-    botSendMessage(chat_id, regDone);
-    sendPlayerCard();
-    return;
-  }
-
-
-
-  /* Старый код обязательного вызова биографии
-  if(user.currentAction == UserActions.input_name){
-    if(text == "/start") user.setUserName(name);
-    else {
-      text = text
-         .replace(/&/g, "")
-         .replace(/</g, "")
-         .replace(/>/g, "")
-         .replace(/"/g, "");
-      if(!text) text = name;
-      user.setUserName(text);
-    }
-    user.setUserCurrentAction(UserActions.input_bio);
-    user.setRating(1000);
-    botSendMessage(chat_id, needBio);
-    return;
-  }
-
-*/
-
+  if(!checkReg()) return;
 
   // start
   if (text.startsWith("/start ")) { 
@@ -71,9 +12,16 @@ function useCases(){
   }
   else if (text == "/start") {
     startCommand();
-  }
+  } // start - пустой
+
+
+  else if(inputSale()) return;
   
-  botSendMessage(chat_id, text); // eho
+  else if(inputRefundSale()) return;
+  
+  else if(checkTextCommand()) return;
+
+  else sendMenu();
 
 }
 
@@ -95,7 +43,40 @@ function startCommand(payload=null){
   }
   // просто /start
   else{
-    botSendMessage(chat_id,"Старт");
+    // botSendMessage(chat_id,"Старт");
 
+  }
+  // anyway
+  sendMenu();
+}
+
+//User Current Actions (use cases)
+let UserActions = {
+  without_action: "",
+  input_phone: "input_phone",
+  input_bio: "input_bio",
+  input_name: "input_name",
+  input_giv: "input_giv",
+  input_buyer: "input_buyer",
+  input_buyerphone: "input_clientphone",
+  input_amount: "input_amount",
+  input_check: "input_check",
+  input_refund_giv: "input_refund_giv",
+  input_refund_buyer: "input_refund_buyer",
+  input_refund_buyerphone: "input_refund_clientphone",
+  input_refund_amount: "input_refund_amount",
+  input_refund_check: "input_refund_check",
+  getInputOrder(){
+    return [
+      this.input_giv,
+      this.input_buyer,
+      this.input_buyerphone,
+      this.input_amount,
+      this.input_check,
+    ]
+  },
+  getPreviousAction(action){
+    let actionInd = this.getInputOrder().indexOf(action);
+    return actionInd-1;
   }
 }
