@@ -87,7 +87,9 @@ function addSaleToStats(row){
     tRating.use().insertRowAfter(rowInStat);
   }
   let oldCount = parseInt(tRating.use().getRange(rowInStat,tRating.getCol(tRating.count_Title)+1).getValue());
+  if(!oldCount) oldCount = 0;
   let oldSum = parseInt(tRating.use().getRange(rowInStat,tRating.getCol(tRating.totalSum_Title)+1).getValue());
+  if(!oldSum) oldSum = 0;
   tRating.use().getRange(rowInStat,3,1,2).setValues([[oldCount+1, oldSum + parseInt(saleData[0][tSales.getCol(tSales.amount_Title)])]]);
   // tRating.use().getRange(tRating.allRange).sort();
 }
